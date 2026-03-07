@@ -59,6 +59,22 @@ const { post, url } = Astro.props;
         </p>
       </div>
 
+      <nav class="max-w-3xl mx-auto px-4 sm:px-6 mb-3 text-sm text-muted dark:text-slate-400" aria-label="Breadcrumb">
+        <a href={getPermalink('/', 'home')} class="hover:underline">Home</a>
+        {
+          post.category && (
+            <>
+              {' - '}
+              <a href={getPermalink(post.category.slug, 'category')} class="hover:underline">
+                {post.category.title}
+              </a>
+            </>
+          )
+        }
+        {' - '}
+        <span aria-current="page" class="text-gray-900 dark:text-slate-200">{post.title}</span>
+      </nav>
+
       <h1
         class="px-4 sm:px-6 max-w-3xl mx-auto text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading"
       >
