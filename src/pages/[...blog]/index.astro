@@ -3,6 +3,7 @@ import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 
 import merge from 'lodash.merge';
 import type { ImageMetadata } from 'astro';
+import { SITE } from 'astrowind:config';
 import Layout from '~/layouts/PageLayout.astro';
 import SinglePost from '~/components/blog/SinglePost.astro';
 import ToBlogLink from '~/components/blog/ToBlogLink.astro';
@@ -25,6 +26,86 @@ const { post } = Astro.props as Props;
 
 const url = getCanonical(getPermalink(post.permalink, 'post'));
 const image = (await findImage(post.image)) as ImageMetadata | string | undefined;
+const authorName = post.author || SITE.name;
+
+const toAbsoluteUrl = (value: string) => {
+  try {
+    return String(new URL(value, Astro.site ?? Astro.url));
+  } catch {
+    return value;
+  }
+};
+
+const homeUrl = toAbsoluteUrl(getPermalink('/', 'home'));
+const categoryUrl = post.category ? toAbsoluteUrl(getPermalink(post.category.slug, 'category')) : undefined;
+const postUrl = toAbsoluteUrl(String(url));
+const imageUrl = image ? toAbsoluteUrl(typeof image === 'string' ? image : image.src) : undefined;
+
+const breadcrumbItems = [
+  {
+    '@type': 'ListItem',
+    position: 1,
+    name: 'Home',
+    item: homeUrl,
+  },
+  ...(post.category
+    ? [
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: post.category.title,
+          item: categoryUrl,
+        },
+      ]
+    : []),
+  {
+    '@type': 'ListItem',
+    position: post.category ? 3 : 2,
+    name: post.title,
+    item: postUrl,
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BlogPosting',
+      headline: post.title,
+      description: post.excerpt,
+      datePublished: new Date(post.publishDate).toISOString(),
+      dateModified: new Date(post.updateDate || post.publishDate).toISOString(),
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': postUrl,
+      },
+      url: postUrl,
+      author: authorName
+        ? {
+            '@type': 'Person',
+            name: authorName,
+          }
+        : undefined,
+      publisher: {
+        '@type': 'Organization',
+        name: SITE.name, // 从配置文件获取: "AstroWind"
+        logo: {
+          '@type': 'ImageObject',
+          url: toAbsoluteUrl('/assets/images/default.png'), // 使用配置中的logo路径
+          width: 1200, // 从配置中获取实际宽度
+          height: 628, // 从配置中获取实际高度
+        },
+      },
+      articleSection: post.category?.title,
+      keywords: post.tags?.map((tag) => tag.title).join(', '),
+      image: imageUrl ? [imageUrl] : undefined,
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbItems,
+    },
+  ],
+};
 
 const metadata = merge(
   {
@@ -46,6 +127,9 @@ const metadata = merge(
 ---
 
 <Layout metadata={metadata}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
   <SinglePost post={{ ...post, image: image }} url={url}>
     {post.Content ? <post.Content /> : <Fragment set:html={post.content || ''} />}
   </SinglePost>
