@@ -26,68 +26,80 @@ const authorName = post.author || SITE.name;
 
 <section class="py-8 sm:py-16 lg:py-20">
   <article class="mx-auto max-w-5xl px-4 sm:px-6">
-    <nav class="mb-3 text-sm text-muted dark:text-slate-400" aria-label="Breadcrumb">
-      <a href={getPermalink('/', 'home')} class="hover:underline">Home</a>
+    <nav class="mb-4 text-sm text-slate-500 dark:text-slate-400" aria-label="Breadcrumb">
+      <a
+        href={getPermalink('/', 'home')}
+        class="transition-colors hover:text-slate-700 hover:underline dark:hover:text-slate-200"
+      >
+        Home
+      </a>
       {
         post.category && (
           <>
-            {' - '}
-            <a href={getPermalink(post.category.slug, 'category')} class="hover:underline">
+            <span class="mx-2 text-slate-400 dark:text-slate-500">/</span>
+            <a
+              href={getPermalink(post.category.slug, 'category')}
+              class="transition-colors hover:text-slate-700 hover:underline dark:hover:text-slate-200"
+            >
               {post.category.title}
             </a>
           </>
         )
       }
-      {' - '}
-      <span aria-current="page" class="text-gray-900 dark:text-slate-200">{post.title}</span>
+      <span class="mx-2 text-slate-400 dark:text-slate-500">/</span>
+      <span aria-current="page" class="truncate text-slate-600 dark:text-slate-300">
+        {post.title}
+      </span>
     </nav>
 
-    <header
-      class={post.image
-        ? 'intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade'
-        : 'intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade'}
-    >
-      <div class="flex justify-between flex-col sm:flex-row mt-0 mb-2 sm:items-center">
-        <p>
-          <Icon name="tabler:clock" class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" />
-          <time datetime={String(post.publishDate)} class="inline-block">{getFormattedDate(post.publishDate)}</time>
-          {
-            authorName && (
-              <>
-                {' '}
-                · <Icon name="tabler:user" class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" />
-                <span class="inline-block">{authorName}</span>
-              </>
-            )
-          }
-          {
-            post.category && (
-              <>
-                {' '}
-                ·{' '}
-                <a class="hover:underline inline-block" href={getPermalink(post.category.slug, 'category')}>
-                  {post.category.title}
-                </a>
-              </>
-            )
-          }
-          {
-            post.readingTime && (
-              <>
-                &nbsp;· <span>{post.readingTime}</span> min read
-              </>
-            )
-          }
-        </p>
-      </div>
-
-      <h1 class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading">
+    <header class="intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      <h1 class="text-4xl font-bold leading-tighter tracking-tighter font-heading md:text-5xl">
         {post.title}
       </h1>
 
-      <p class="mt-4 mb-8 text-xl md:text-2xl text-muted dark:text-slate-400 text-justify">
+      <p class="my-6 text-base text-slate-600 dark:text-slate-400 md:text-lg">
         {post.excerpt}
       </p>
+
+      <div class="my-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-slate-500 dark:text-slate-400">
+        <div class="flex items-center gap-1.5">
+          <Icon name="tabler:clock" class="h-4 w-4" />
+          <time datetime={String(post.publishDate)}>{getFormattedDate(post.publishDate)}</time>
+        </div>
+
+        {
+          authorName && (
+            <div class="flex items-center gap-1.5">
+              <span class="text-slate-300 dark:text-slate-600">·</span>
+              <Icon name="tabler:user" class="h-4 w-4" />
+              <span>{authorName}</span>
+            </div>
+          )
+        }
+
+        {
+          post.category && (
+            <div class="flex items-center gap-1.5">
+              <span class="text-slate-300 dark:text-slate-600">·</span>
+              <a
+                class="transition-colors hover:text-slate-700 hover:underline dark:hover:text-slate-200"
+                href={getPermalink(post.category.slug, 'category')}
+              >
+                {post.category.title}
+              </a>
+            </div>
+          )
+        }
+
+        {
+          post.readingTime && (
+            <div class="flex items-center gap-1.5">
+              <span class="text-slate-300 dark:text-slate-600">·</span>
+              <span>{post.readingTime} min read</span>
+            </div>
+          )
+        }
+      </div>
 
       {
         post.image ? (
@@ -105,7 +117,7 @@ const authorName = post.author || SITE.name;
             />
           </div>
         ) : (
-          <div>
+          <div class="mt-8">
             <div class="border-t dark:border-slate-700" />
           </div>
         )
@@ -115,7 +127,7 @@ const authorName = post.author || SITE.name;
     <div class="mt-8 xl:grid xl:grid-cols-[minmax(0,1fr)_14rem] xl:gap-12">
       <div class="min-w-0">
         <div
-          class="prose prose-md lg:prose-lg max-w-none dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg prose-headings:scroll-mt-24 prose-li:my-0"
+          class="prose prose-base lg:prose-base max-w-none font-normal dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tight prose-headings:tracking-tight prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg prose-headings:scroll-mt-24 prose-li:my-0"
         >
           <slot />
         </div>
