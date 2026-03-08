@@ -1,0 +1,38 @@
+---
+import type { Heading } from '~/types';
+
+export interface Props {
+  headings?: Heading[];
+  title?: string;
+}
+
+const { headings = [], title = 'On this page' } = Astro.props;
+
+const items = headings.filter((item) => item.depth === 2 || item.depth === 3);
+---
+
+{
+  items.length > 0 && (
+    <nav
+      aria-label="Table of contents"
+      class="border-l border-gray-200 dark:border-slate-700 pl-4"
+    >
+      <p class="mb-3 text-sm font-semibold tracking-tight text-gray-900 dark:text-slate-200">
+        {title}
+      </p>
+
+      <ul class="space-y-2 text-sm leading-6">
+        {items.map((item) => (
+          <li class={item.depth === 3 ? 'ml-3' : ''}>
+            <a
+              href={`#${item.slug}`}
+              class="block text-gray-500 dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors"
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}

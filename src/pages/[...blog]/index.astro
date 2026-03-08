@@ -130,7 +130,7 @@ const metadata = merge(
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </Fragment>
-  <SinglePost post={{ ...post, image: image }} url={url}>
+  <SinglePost post={{ ...post, image: image }} url={url} headings={post.headings ?? []}>
     {post.Content ? <post.Content /> : <Fragment set:html={post.content || ''} />}
   </SinglePost>
   <ToBlogLink />

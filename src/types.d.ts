@@ -40,8 +40,16 @@ export interface Post {
   Content?: AstroComponentFactory;
   content?: string;
 
+  headings?: Heading[];
+
   /**  */
   readingTime?: number;
+}
+
+export interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
 }
 
 export interface Taxonomy {
