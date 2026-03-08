@@ -94,12 +94,12 @@ const authorName = post.author || SITE.name;
           <div class="mt-8">
             <Image
               src={post.image}
-              class="max-w-full lg:max-w-[900px] mx-auto mb-6 sm:rounded-md bg-gray-400 dark:bg-slate-700"
-              widths={[400, 900]}
-              sizes="(max-width: 900px) 400px, 900px"
+              class="w-full max-w-full mx-auto mb-6 sm:rounded-md bg-gray-400 dark:bg-slate-700"
+              widths={[400, 900, 1200, 1600]}
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 90vw, 1200px"
               alt={post?.excerpt || ''}
-              width={900}
-              height={506}
+              width={1600}
+              height={900}
               loading="eager"
               decoding="async"
             />
